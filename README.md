@@ -5,3 +5,9 @@
 [![CI](https://github.com/FollowTheProcess/aoc2024/workflows/CI/badge.svg)](https://github.com/FollowTheProcess/aoc2024/actions?query=workflow%3ACI)
 
 Advent of Code 2024, in Go!
+
+Run a day's solutions with:
+
+```shell
+go run ./cmd/day01
+```
