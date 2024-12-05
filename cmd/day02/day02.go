@@ -95,6 +95,7 @@ func run(input string) error {
 	}
 
 	fmt.Printf("Part 1: %d\n", countSafe(reports))
+	fmt.Printf("Part 2: %d\n", countSafeRelaxed(reports))
 
 	return nil
 }
@@ -142,6 +143,19 @@ func countSafe(reports []Report) int {
 	return safe
 }
 
+// countSafeRelaxed returns the number of reports that are safe with
+// the problem dampener taken into account.
+func countSafeRelaxed(reports []Report) int {
+	safe := 0
+	for _, report := range reports {
+		if report.IsSafeRelaxed() {
+			safe++
+		}
+	}
+
+	return safe
+}
+
 // Report repesents a report from the red-nosed reactor.
 type Report []int
 
@@ -162,6 +176,26 @@ func (r Report) IsSafe() bool {
 	}
 
 	return true
+}
+
+// IsSafeRelaxed is like IsSafe but takes the problem dampener into account.
+func (r Report) IsSafeRelaxed() bool {
+	if r.IsSafe() {
+		// If it's safe already it's obviously still safe
+		return true
+	}
+
+	// Remove one at a time and test for safety
+	for i := 0; i < len(r); i++ {
+		removed := append(append([]int{}, r[0:i]...), r[i+1:]...)
+		report := Report(removed)
+		if report.IsSafe() {
+			return true
+		}
+	}
+
+	// Still not safe
+	return false
 }
 
 // allDecreasing reports whether the Report contains values that are

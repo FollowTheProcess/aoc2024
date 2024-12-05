@@ -32,20 +32,38 @@ func TestParse(t *testing.T) {
 }
 
 func TestCountSafe(t *testing.T) {
-	reports := []Report{
-		{7, 6, 4, 2, 1},
-		{1, 2, 7, 8, 9},
-		{9, 7, 6, 2, 1},
-		{1, 3, 2, 4, 5},
-		{8, 6, 4, 4, 1},
-		{1, 3, 6, 7, 9},
-	}
+	t.Run("no dampener", func(t *testing.T) {
+		reports := []Report{
+			{7, 6, 4, 2, 1},
+			{1, 2, 7, 8, 9},
+			{9, 7, 6, 2, 1},
+			{1, 3, 2, 4, 5},
+			{8, 6, 4, 4, 1},
+			{1, 3, 6, 7, 9},
+		}
 
-	want := 2
+		want := 2
 
-	got := countSafe(reports)
+		got := countSafe(reports)
 
-	test.Equal(t, got, want) // countSafe returned the wrong answer
+		test.Equal(t, got, want) // countSafe returned the wrong answer
+	})
+	t.Run("with dampener", func(t *testing.T) {
+		reports := []Report{
+			{7, 6, 4, 2, 1},
+			{1, 2, 7, 8, 9},
+			{9, 7, 6, 2, 1},
+			{1, 3, 2, 4, 5},
+			{8, 6, 4, 4, 1},
+			{1, 3, 6, 7, 9},
+		}
+
+		want := 4
+
+		got := countSafeRelaxed(reports)
+
+		test.Equal(t, got, want) // countSafe returned the wrong answer
+	})
 }
 
 func TestReport(t *testing.T) {
