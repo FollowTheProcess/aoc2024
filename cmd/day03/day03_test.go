@@ -7,7 +7,10 @@ import (
 	"github.com/FollowTheProcess/test"
 )
 
-const testInput = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
+const (
+	testInput                = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
+	testInputWithDosAndDonts = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"
+)
 
 func TestParseMul(t *testing.T) {
 	tests := []struct {
@@ -78,10 +81,10 @@ func TestParseMuls(t *testing.T) {
 	test.Ok(t, err)
 
 	want := []Mul{
-		{X: 2, Y: 4},
-		{X: 5, Y: 5},
-		{X: 11, Y: 8},
-		{X: 8, Y: 5},
+		{X: 2, Y: 4, Start: 1},
+		{X: 5, Y: 5, Start: 29},
+		{X: 11, Y: 8, Start: 53},
+		{X: 8, Y: 5, Start: 62},
 	}
 
 	test.EqualFunc(t, got, want, slices.Equal)
@@ -97,4 +100,16 @@ func TestPart1Example(t *testing.T) {
 	}
 
 	test.Equal(t, sum, 161) // Wrong answer for part 1 example
+}
+
+func TestPart2Example(t *testing.T) {
+	muls, err := parseEnabledMuls(testInputWithDosAndDonts)
+	test.Ok(t, err)
+
+	sum := 0
+	for _, mul := range muls {
+		sum += mul.Do()
+	}
+
+	test.Equal(t, sum, 48) // Wrong answer for part 2 example
 }
